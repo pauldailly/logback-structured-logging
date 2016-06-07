@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+    <contextName>testContext</contextName>
+    <appender name="stash" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <file>/tmp/test.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/tmp/test.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>1</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <logLevel/>
+                <timestamp/>
+                <threadName/>
+                <mdc/>
+                <loggerName/>
+                <message/>
+                <stackTrace/>
+                <arguments/>
+                <tags/>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!--<appender name="tcp-stash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">-->
+        <!--<destination>192.168.99.100:5000</destination>-->
+
+        <!--&lt;!&ndash; encoder is required &ndash;&gt;-->
+        <!--<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+            <!--<providers>-->
+                <!--<logLevel/>-->
+                <!--<timestamp/>-->
+                <!--<threadName/>-->
+                <!--<mdc/>-->
+                <!--<loggerName/>-->
+                <!--<message/>-->
+                <!--<stackTrace/>-->
+                <!--<arguments/>-->
+                <!--<tags/>-->
+            <!--</providers>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--
+        The logstashEncoderAppender and loggingEventCompositeJsonEncoderAppender are
+        both tested by ConfigurationTest, and should result in roughly the same configuration.
+
+        The logstashEncoderAppender uses the "old" configuration.
+        The loggingEventCompositeJsonEncoderAppender uses the "new" composite configuration.
+    -->
+    <variable scope="context" name="mdcPattern" value="%replace(%X){'[a-z]+:( |$)', ''}"/>
+    <variable scope="context" name="logPattern" value="%-5p %d [%t] ${mdcPattern} %c{20}: %m%n"/>
+    <appender name="logstashEncoderAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${logPattern}</pattern>
+            <!--<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %X %msg%n</pattern>-->
+        </encoder>
+    </appender>
+    <!--<appender name="loggingEventCompositeJsonEncoderAppender" class="ch.qos.logback.core.ConsoleAppender">-->
+        <!--<encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">-->
+            <!--<providers>-->
+                <!--<timestamp/>-->
+                <!--<version/>-->
+                <!--<message>-->
+                    <!--<fieldName>customMessage</fieldName>-->
+                <!--</message>-->
+                <!--<nestedField>-->
+                    <!--<fieldName>nested</fieldName>-->
+                    <!--<providers>-->
+                        <!--<rawMessage>-->
+                            <!--<fieldName>customRawMessage</fieldName>-->
+                        <!--</rawMessage>-->
+                    <!--</providers>-->
+                <!--</nestedField>-->
+                <!--<loggerName>-->
+                    <!--<shortenedLoggerNameLength>20</shortenedLoggerNameLength>-->
+                <!--</loggerName>-->
+                <!--<threadName/>-->
+                <!--<logLevel/>-->
+                <!--<logLevelValue/>-->
+                <!--<callerData>-->
+                    <!--<fieldName>caller</fieldName>-->
+                    <!--<classFieldName>class</classFieldName>-->
+                    <!--<methodFieldName>method</methodFieldName>-->
+                    <!--<fileFieldName>file</fileFieldName>-->
+                    <!--<lineFieldName>line</lineFieldName>-->
+                <!--</callerData>-->
+                <!--<stackTrace>-->
+                    <!--<throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">-->
+                        <!--<maxDepthPerThrowable>20</maxDepthPerThrowable>-->
+                        <!--<maxLength>1000</maxLength>-->
+                        <!--<shortenedClassNameLength>30</shortenedClassNameLength>-->
+                        <!--<rootCauseFirst>true</rootCauseFirst>-->
+                        <!--<exclude>excluded</exclude>-->
+                    <!--</throwableConverter>-->
+                <!--</stackTrace>-->
+                <!--<context/>-->
+                <!--<contextName/>-->
+                <!--<jsonMessage/>-->
+                <!--<mdc>-->
+                    <!--<includeMdcKeyName>included</includeMdcKeyName>-->
+                <!--</mdc>-->
+                <!--<contextMap/>-->
+                <!--<globalCustomFields>-->
+                    <!--<customFields>{"customName":"customValue"}</customFields>-->
+                <!--</globalCustomFields>-->
+                <!--<tags/>-->
+                <!--<logstashMarkers/>-->
+                <!--<pattern>-->
+                    <!--<pattern>{"patternName":"patternValue","relativeTime":"#asLong{%relative}"}</pattern>-->
+                <!--</pattern>-->
+                <!--<provider class="net.logstash.logback.TestJsonProvider"/>-->
+                <!--<arguments>-->
+                    <!--<includeNonStructuredArguments>true</includeNonStructuredArguments>-->
+                    <!--<nonStructuredArgumentsFieldPrefix>prefix</nonStructuredArgumentsFieldPrefix>-->
+                <!--</arguments>-->
+            <!--</providers>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--<appender name="listAppender" class="ch.qos.logback.core.read.ListAppender"/>-->
+    <!--<logger name="net.logstash.logback.encoder.LogstashEncoderTest" level="DEBUG">-->
+        <!--<appender-ref ref="stash" />-->
+    <!--</logger>-->
+    <root level="ERROR"/>
+    <logger level="INFO" name="com.pauldailly">
+        <!--<appender-ref ref="loggingEventCompositeJsonEncoderAppender" />-->
+        <appender-ref ref="logstashEncoderAppender" />
+        <appender-ref ref="stash" />
+        <!--<appender-ref ref="tcp-stash" />-->
+        <!--<appender-ref ref="listAppender" />-->
+    </logger>
+</configuration>
