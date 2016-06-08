@@ -11,16 +11,15 @@
       <entry name="!?*.flex" />
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
-      <entry name="!?*.aj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
+      <profile default="true" name="Default" enabled="true">
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="logback-structured-logging-demo_main" target="1.8" />
-      <module name="logback-structured-logging-demo_test" target="1.8" />
+      <module name="logback-structured-logging_main" target="1.8" />
+      <module name="logback-structured-logging_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

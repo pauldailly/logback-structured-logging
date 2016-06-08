@@ -1,9 +1,8 @@
 package com.pauldailly
 
-import groovy.util.logging.Slf4j
 import org.slf4j.MDC
-import org.springframework.stereotype.Component
 
+import groovy.util.logging.Slf4j
 /**
  * Created by pauldailly on 01/06/2016.
  */
@@ -22,7 +21,7 @@ class ParentJobProcess {
 
             throw new RuntimeException('Something really really bad happened!!!')
         } catch (RuntimeException e) {
-            log.warn('I caught a runtime exception and filebeat sent it to logstash', e)
+            log.warn('I caught a runtime exception and filebeat sent it to logstash which sent it to es', e)
         }
 
     }
